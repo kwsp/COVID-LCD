@@ -3,6 +3,7 @@ import RPi.GPIO as GPIO
 import covid_api
 from lcd import gpio_init, lcd_init, lcd_print
 
+API_UPDATE_INTERVAL = 60*5
 
 def main():
     # Initialise GPIO pins
@@ -11,19 +12,23 @@ def main():
     # Initialise display
     lcd_init()
 
+    covid_data = covid_api.CovidDataUS()
+    last_update = time.time()
+
     while True:
-        data = covid_api.get_us_current()
-        lcd_print("US Positive", "{}".format(data.get("positive")))
+        lcd_print("US Cases:{:7}".format(covid_data.cases),
+                  "US Today:{:7}".format(covid_data.today))
+
         time.sleep(3)
 
-        lcd_print("US Death", "{}".format(data.get("death")))
-        time.sleep(3)
+        lcd_print("US Death:{:7}".format(covid_data.deaths),
+                  "US Recov:{:7}".format(covid_data.recovered))
 
-        lcd_print("US Recovered", "{}".format(data.get("recovered")))
-        time.sleep(3)
+        if time.time() - last_update > API_UPDATE_INTERVAL:
+            covid_data.update()
+        else:
+            time.sleep(3)
 
-        lcd_print("COVID-19", "US Tracker")
-        time.sleep(1)
 
 
 # Begin program
