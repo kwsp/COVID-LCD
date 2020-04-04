@@ -3,7 +3,8 @@ import RPi.GPIO as GPIO
 import covid_api
 from lcd import gpio_init, lcd_init, lcd_print
 
-API_UPDATE_INTERVAL = 60*5
+API_UPDATE_INTERVAL = 60 * 5
+
 
 def main():
     # Initialise GPIO pins
@@ -12,17 +13,21 @@ def main():
     # Initialise display
     lcd_init()
 
-    covid_data = covid_api.CovidDataUS()
+    covid_data = covid_api.CovidData.from_worldometer_country()
     last_update = time.time()
 
     while True:
-        lcd_print("US Cases:{:7}".format(covid_data.cases),
-                  "US Today:{:7}".format(covid_data.today))
+        lcd_print(
+            "US Cases:{:7}".format(covid_data.cases),
+            "US Today:{:7}".format(covid_data.today),
+        )
 
         time.sleep(4)
 
-        lcd_print("US Death:{:7}".format(covid_data.deaths),
-                  "US Recov:{:7}".format(covid_data.recovered))
+        lcd_print(
+            "US Death:{:7}".format(covid_data.deaths),
+            "US Recov:{:7}".format(covid_data.recovered),
+        )
 
         new_time = time.time()
         if new_time - last_update > API_UPDATE_INTERVAL:
@@ -30,7 +35,6 @@ def main():
             last_update = new_time
         else:
             time.sleep(4)
-
 
 
 # Begin program
