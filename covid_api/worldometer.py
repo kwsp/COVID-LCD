@@ -31,6 +31,21 @@ class CovidData(NamedTuple):
             recovered=recovered.string.strip(),
         )
 
+    @classmethod
+    def from_api(cls, country: str = "USA") -> "CovidData":
+        try:
+            data = requests.get("https://corona.lmao.ninja/countries/" + country).json()
+        except Exception as e:
+            raise ValueError("API call failed: {}".format(e))
+
+        return cls(
+            cases=data["cases"],
+            today=data["todayCases"],
+            deaths=data["deaths"],
+            recovered=data["recovered"],
+        )
+
+
 
 def parse_wordometer() -> bs4.element.ResultSet:
     """
