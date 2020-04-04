@@ -38,7 +38,7 @@ def main():
         new_time = time.time()
         if new_time - last_update > API_UPDATE_INTERVAL:
             print("Getting covid data")
-            covid_data.update()
+            covid_data = covid_api.CovidData.from_worldometer_country()
             last_update = new_time
         else:
             time.sleep(4)
