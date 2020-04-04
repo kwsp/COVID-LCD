@@ -19,15 +19,17 @@ def main():
         lcd_print("US Cases:{:7}".format(covid_data.cases),
                   "US Today:{:7}".format(covid_data.today))
 
-        time.sleep(3)
+        time.sleep(4)
 
         lcd_print("US Death:{:7}".format(covid_data.deaths),
                   "US Recov:{:7}".format(covid_data.recovered))
 
-        if time.time() - last_update > API_UPDATE_INTERVAL:
+        new_time = time.time()
+        if new_time - last_update > API_UPDATE_INTERVAL:
             covid_data.update()
+            last_update = new_time
         else:
-            time.sleep(3)
+            time.sleep(4)
 
 
 
