@@ -1,6 +1,5 @@
 import time
 import RPi.GPIO as GPIO
-import logging
 
 import covid_api
 from lcd import gpio_init, lcd_init, lcd_print
