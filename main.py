@@ -18,7 +18,8 @@ def main():
     lcd_init()
 
     print("Getting covid data")
-    covid_data = covid_api.CovidData.from_worldometer_country()
+    #covid_data = covid_api.CovidData.from_worldometer_country()
+    covid_data = covid_api.CovidData.from_api()
     last_update = time.time()
 
     while True:
@@ -38,7 +39,13 @@ def main():
         new_time = time.time()
         if new_time - last_update > API_UPDATE_INTERVAL:
             print("Getting covid data")
-            covid_data = covid_api.CovidData.from_worldometer_country()
+            try:
+                #covid_data = covid_api.CovidData.from_worldometer_country()
+                covid_data = covid_api.CovidData.from_api()
+            except Exception as e:
+                print("Parsing worldometer failed, Caught exception: {}".format(e))
+                covid_data = covid_api.CovidData.na()
+
             last_update = new_time
         else:
             time.sleep(4)

@@ -45,6 +45,10 @@ class CovidData(NamedTuple):
             recovered=data["recovered"],
         )
 
+    @classmethod
+    def na(cls) -> "CovidData":
+        return cls(cases="N/A", today="N/A", deaths="N/A", recovered="N/A")
+
 
 
 def parse_wordometer() -> bs4.element.ResultSet:
