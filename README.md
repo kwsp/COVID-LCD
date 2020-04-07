@@ -9,4 +9,6 @@ Components:
 Dependencies:
 * RPi.GPIO (should come pre-installed in a Raspbian system)
 * requests
-* beautifulsoup4
+
+Starting the screen:
+```python3 main.py```
