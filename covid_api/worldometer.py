@@ -34,7 +34,7 @@ class CovidData(NamedTuple):
     @classmethod
     def from_api(cls, country: str = "USA") -> "CovidData":
         try:
-            data = requests.get("https://corona.lmao.ninja/countries/" + country).json()
+            data = requests.get("https://corona.lmao.ninja/v2/countries/" + country).json()
         except Exception as e:
             raise ValueError("API call failed: {}".format(e))
 
