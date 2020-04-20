@@ -27,7 +27,7 @@ Use your favourite text editor to create the systemd unit file with sudo, and le
 sudo vim /etc/systemd/system/lcd.service
 ```
 
-Copy the following into the file, make sure to replace <YOUR USERNAME> with your username and <PATH TO WORKING DIRECTORY> with the absolute path to this repo.
+Copy the following into the file, make sure to replace "YOUR USERNAME" with your username and "PATH TO WORKING DIRECTORY" with the absolute path to this repo.
 
 ```
 [Unit]
