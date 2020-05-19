@@ -11,7 +11,11 @@ Dependencies:
 * RPi.GPIO (should come pre-installed in a Raspbian system)
 * requests
 
-Starting the screen:
+```bash
+python3 -m pip install -r requirements.txt
+```
+
+Starting the screen manually:
 
 ```bash
 python3 main.py
@@ -19,50 +23,16 @@ python3 main.py
 
 ## Configure the script to run as a systemd service
 
-Instead of running the code manually, we can let [systemd](https://en.wikipedia.org/wiki/Systemd) manage the process for us. Systemd is the system service manager for a bunch of GNU/Linux systems including Raspbian, Debian and Ubuntu. 
+Instead of running the code manually, we can let [systemd](https://en.wikipedia.org/wiki/Systemd) manage the process for us. Systemd is the system service manager for a bunch of GNU/Linux systems including Raspbian, Debian and Ubuntu. I have provided a unit-file template with a install(uninstall) script. This adds a user unit file and does not require sudo access.
 
-Use your favourite text editor to create the systemd unit file with sudo, and lets call the service 'lcd':
-
-```bash
-sudo vim /etc/systemd/system/lcd.service
-```
-
-Copy the following into the file, make sure to replace "YOUR USERNAME" with your username and "PATH TO WORKING DIRECTORY" with the absolute path to this repo.
-
-```
-[Unit]
-Description=LCD Display
-After=network.target
-StartLimitIntervalSec=0
-
-[Service]
-Type=simple
-Restart=always
-RestartSec=1
-User=<YOUR USERNAME>
-WorkingDirectory=<PATH TO THE WORKING DIRECTORY WHERE main.py IS LOCATED>
-ExecStart=python3 main.py
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Finally, reload the systemd daemon so systemd recognise our new config file:
+To install the daemon and start running it in the background
 
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl enable lcd
-sudo systemctl start lcd
+./install.sh
 ```
 
-To stop this process we can run 
+To uninstall the daemon and stop the service
 
 ```bash
-sudo systemctl stop lcd
-```
-
-And to disable it from running at startup,
-
-```bash
-sudo systemctl disable lcd
+./install.sh uninstall
 ```
