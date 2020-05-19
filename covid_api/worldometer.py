@@ -1,8 +1,9 @@
+import unittest
 from typing import NamedTuple
 
-# import bs4
-# from bs4 import BeautifulSoup
 import requests
+
+BASE_URL = "https://disease.sh"
 
 
 class CovidData(NamedTuple):
@@ -11,30 +12,10 @@ class CovidData(NamedTuple):
     deaths: str
     recovered: str
 
-    # @classmethod
-    # def from_worldometer_country(cls, country: str = "USA") -> "CovidData":
-
-    # try:
-    # row = get_row(country)
-    # country = row.td
-    # cases = country.find_next("td")
-    # today = cases.find_next("td")
-    # deaths = today.find_next("td")
-    # recovered = deaths.find_next("td").find_next("td")
-    # except Exception as e:
-    # raise ValueError("Parsing of worldometer country data failed: {}".format(e))
-
-    # return cls(
-    # cases=cases.string.strip(),
-    # today=today.string.strip(),
-    # deaths=deaths.string.strip(),
-    # recovered=recovered.string.strip(),
-    # )
-
     @classmethod
     def from_api(cls, country: str = "USA") -> "CovidData":
         try:
-            data = requests.get("https://corona.lmao.ninja/v2/countries/" + country).json()
+            data = requests.get(BASE_URL + "/v2/countries/" + country).json()
         except Exception as e:
             raise ValueError("API call failed: {}".format(e))
 
@@ -50,34 +31,22 @@ class CovidData(NamedTuple):
         return cls(cases="N/A", today="N/A", deaths="N/A", recovered="N/A")
 
 
-# def parse_wordometer() -> bs4.element.ResultSet:
-# """
-# Parse the worldometer covid 19 page
-# Return the data table in soup format
-# """
-# worldometer_page = requests.get("https://www.worldometers.info/coronavirus/")
+class TestCovidData(unittest.TestCase):
+    def test_api(self):
+        data = CovidData.from_api()
+        self.assertGreater(data.cases, 0)
+        self.assertGreater(data.deaths, 0)
+        self.assertGreater(data.recovered, 0)
+        self.assertGreater(data.today, 0)
 
-# soup = BeautifulSoup(worldometer_page.text, "html.parser")
-
-# # Find all table rows
-# rows = soup.find_all("tr")
-
-# return rows
-
-
-# def get_row(country: str = "USA") -> bs4.element.Tag:
-# """
-# Find the USA row from the table
-# """
-# rows = parse_wordometer()
-
-# for row in rows[1:]:
-# if row.td.string == country:
-# return row
-
-# raise ValueError("Country name not found")
+    def test_na(self):
+        data = CovidData.na()
+        self.assertEqual(data.cases, "N/A")
+        self.assertEqual(data.deaths, "N/A")
+        self.assertEqual(data.recovered, "N/A")
+        self.assertEqual(data.today, "N/A")
 
 
-# if __name__ == "__main__":
-# data = CovidData.from_worldometer_country()
-# breakpoint()
+if __name__ == "__main__":
+    unittest.main()
+
